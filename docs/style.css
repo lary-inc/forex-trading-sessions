@@ -29,6 +29,7 @@ body {
     from {
         text-shadow: 0 0 10px cyan, 0 0 20px #00fff2;
     }
+
     to {
         text-shadow: 0 0 25px #00fff2, 0 0 50px cyan, 0 0 75px cyan;
     }
@@ -70,18 +71,76 @@ body {
 }
 
 /* Active session variations */
-.session.active.sydney { animation: pulse-sydney 2s infinite alternate; }
-.session.active.tokyo { animation: pulse-tokyo 2s infinite alternate; }
-.session.active.frankfurt { animation: pulse-frankfurt 2s infinite alternate; }
-.session.active.london { animation: pulse-london 2s infinite alternate; }
-.session.active.newyork { animation: pulse-newyork 2s infinite alternate; }
+.session.active.sydney {
+    animation: pulse-sydney 2s infinite alternate;
+}
+
+.session.active.tokyo {
+    animation: pulse-tokyo 2s infinite alternate;
+}
+
+.session.active.frankfurt {
+    animation: pulse-frankfurt 2s infinite alternate;
+}
+
+.session.active.london {
+    animation: pulse-london 2s infinite alternate;
+}
+
+.session.active.newyork {
+    animation: pulse-newyork 2s infinite alternate;
+}
 
 /* Pulse Animations */
-@keyframes pulse-sydney { from { box-shadow: 0 0 25px #ffb347, 0 0 50px #ffb347; } to { box-shadow: 0 0 45px #ffb347, 0 0 90px #ffb347; } }
-@keyframes pulse-tokyo { from { box-shadow: 0 0 25px #ff0066, 0 0 50px #ff0066; } to { box-shadow: 0 0 45px #ff0066, 0 0 90px #ff0066; } }
-@keyframes pulse-frankfurt { from { box-shadow: 0 0 25px #00ffcc, 0 0 50px #00ffcc; } to { box-shadow: 0 0 45px #00ffcc, 0 0 90px #00ffcc; } }
-@keyframes pulse-london { from { box-shadow: 0 0 25px #66ff00, 0 0 50px #48ff00; } to { box-shadow: 0 0 45px #5eff00, 0 0 90px #7bff00; } }
-@keyframes pulse-newyork { from { box-shadow: 0 0 25px #009dff, 0 0 50px #009dff; } to { box-shadow: 0 0 45px #009dff, 0 0 90px #009dff; } }
+@keyframes pulse-sydney {
+    from {
+        box-shadow: 0 0 25px #ffb347, 0 0 50px #ffb347;
+    }
+
+    to {
+        box-shadow: 0 0 45px #ffb347, 0 0 90px #ffb347;
+    }
+}
+
+@keyframes pulse-tokyo {
+    from {
+        box-shadow: 0 0 25px #ff0066, 0 0 50px #ff0066;
+    }
+
+    to {
+        box-shadow: 0 0 45px #ff0066, 0 0 90px #ff0066;
+    }
+}
+
+@keyframes pulse-frankfurt {
+    from {
+        box-shadow: 0 0 25px #00ffcc, 0 0 50px #00ffcc;
+    }
+
+    to {
+        box-shadow: 0 0 45px #00ffcc, 0 0 90px #00ffcc;
+    }
+}
+
+@keyframes pulse-london {
+    from {
+        box-shadow: 0 0 25px #66ff00, 0 0 50px #48ff00;
+    }
+
+    to {
+        box-shadow: 0 0 45px #5eff00, 0 0 90px #7bff00;
+    }
+}
+
+@keyframes pulse-newyork {
+    from {
+        box-shadow: 0 0 25px #009dff, 0 0 50px #009dff;
+    }
+
+    to {
+        box-shadow: 0 0 45px #009dff, 0 0 90px #009dff;
+    }
+}
 
 .clock {
     margin-top: 1.5rem;
@@ -100,4 +159,62 @@ body {
     font-size: 1.2rem;
     color: #ffcc00;
     text-shadow: 0 0 10px #ffcc00, 0 0 20px #ffcc00;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .dashboard {
+        padding: 2rem;
+        width: 90%;
+    }
+
+    .dashboard-title {
+        font-size: 2rem;
+        letter-spacing: 2px;
+    }
+
+    .sessions {
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 2rem;
+    }
+
+    .session {
+        width: 120px;
+        height: 120px;
+        font-size: 1rem;
+    }
+
+    .clock,
+    .pairs,
+    .countdown {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .sessions {
+        grid-template-columns: 1fr;
+        grid-gap: 1.5rem;
+    }
+
+    .session {
+        width: 100px;
+        height: 100px;
+        font-size: 0.9rem;
+    }
+
+    .dashboard-title {
+        font-size: 1.7rem;
+    }
+
+    .clock,
+    .pairs,
+    .countdown {
+        font-size: 1rem;
+    }
+}
+
+.dashboard {
+    max-width: 600px;
+    width: 90%;
 }
