@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <title>Trading Sessions Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="dashboard">
+        <h2 class="dashboard-title">Trading Sessions</h2>
+        <div class="clock">
+            UTC: <span id="utcClock"></span><br>
+            Local: <span id="localClock"></span>
+        </div>
+
+        <div class="sessions">
+            <div id="Sydney" class="session">Sydney</div>
+            <div id="Tokyo" class="session">Tokyo</div>
+            <div id="Frankfurt" class="session">Frankfurt</div>
+            <div id="London" class="session">London</div>
+            <div id="NewYork" class="session">New York</div>
+        </div>
+
+        <div class="pairs" id="pairs">Best Pairs: -</div>
+        <div class="countdown" id="countdown">Next Session: -</div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
