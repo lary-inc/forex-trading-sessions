@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
     background: #0b0f19;
     color: #fff;
@@ -6,14 +10,18 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    margin: 0;
 }
 
 .dashboard {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 2rem;
-    padding: 3rem 4rem;
+    padding: 3rem 6rem;
     text-align: center;
     box-shadow: 0 0 35px rgba(0, 255, 255, 0.25);
+    overflow: visible;
+    max-width: 700px;
+    width: 100%;
 }
 
 .dashboard-title {
@@ -37,15 +45,15 @@ body {
 
 .sessions {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 3rem;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 3.5rem;
     margin-top: 2.5rem;
     justify-items: center;
 }
 
 .session {
-    width: 160px;
-    height: 160px;
+    width: 140px;
+    height: 140px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -60,27 +68,17 @@ body {
     transition: all 0.3s ease-in-out;
 }
 
-.session span {
-    position: relative;
-    z-index: 2;
-}
-
 .session:hover {
     transform: scale(1.08);
     box-shadow: 0 0 20px cyan;
 }
 
-/* Active session variations */
 .session.active.sydney {
     animation: pulse-sydney 2s infinite alternate;
 }
 
 .session.active.tokyo {
     animation: pulse-tokyo 2s infinite alternate;
-}
-
-.session.active.frankfurt {
-    animation: pulse-frankfurt 2s infinite alternate;
 }
 
 .session.active.london {
@@ -91,7 +89,6 @@ body {
     animation: pulse-newyork 2s infinite alternate;
 }
 
-/* Pulse Animations */
 @keyframes pulse-sydney {
     from {
         box-shadow: 0 0 25px #ffb347, 0 0 50px #ffb347;
@@ -109,16 +106,6 @@ body {
 
     to {
         box-shadow: 0 0 45px #ff0066, 0 0 90px #ff0066;
-    }
-}
-
-@keyframes pulse-frankfurt {
-    from {
-        box-shadow: 0 0 25px #00ffcc, 0 0 50px #00ffcc;
-    }
-
-    to {
-        box-shadow: 0 0 45px #00ffcc, 0 0 90px #00ffcc;
     }
 }
 
@@ -161,20 +148,17 @@ body {
     text-shadow: 0 0 10px #ffcc00, 0 0 20px #ffcc00;
 }
 
-/* Mobile Responsiveness */
 @media (max-width: 768px) {
     .dashboard {
         padding: 2rem;
-        width: 90%;
     }
 
     .dashboard-title {
         font-size: 2rem;
-        letter-spacing: 2px;
     }
 
     .sessions {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr;
         grid-gap: 2rem;
     }
 
@@ -182,12 +166,6 @@ body {
         width: 120px;
         height: 120px;
         font-size: 1rem;
-    }
-
-    .clock,
-    .pairs,
-    .countdown {
-        font-size: 1.1rem;
     }
 }
 
@@ -212,9 +190,4 @@ body {
     .countdown {
         font-size: 1rem;
     }
-}
-
-.dashboard {
-    max-width: 600px;
-    width: 90%;
 }

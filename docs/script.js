@@ -9,15 +9,13 @@ updateClocks();
 const sessions = {
     Sydney: [22, 7],
     Tokyo: [0, 9],
-    Frankfurt: [6, 15],
-    London: [7, 16],
-    NewYork: [12, 21],
+    London: [8, 17],
+    NewYork: [13, 22],
 };
 
 const pairsBySession = {
     Sydney: "AUD/USD, NZD/USD",
     Tokyo: "USD/JPY, AUD/JPY, EUR/JPY",
-    Frankfurt: "EUR/USD, EUR/CHF",
     London: "GBP/USD, EUR/USD, EUR/GBP",
     NewYork: "USD/CAD, GBP/USD, EUR/USD, XAU/USD"
 };
@@ -25,22 +23,31 @@ const pairsBySession = {
 function highlightSession() {
     const now = new Date();
     const utcHour = now.getUTCHours();
-    let active = null;
+    const utcMinutes = now.getUTCMinutes();
+    const utcTime = utcHour + utcMinutes / 60;
+    let activeSessions = [];
 
     for (let session in sessions) {
         let [start, end] = sessions[session];
-        let isActive = start <= end ? (utcHour >= start && utcHour < end) : (utcHour >= start || utcHour < end);
+        let isActive = start <= end ? utcTime >= start && utcTime < end : utcTime >= start || utcTime < end;
         const el = document.getElementById(session);
         const sessionClass = session.toLowerCase();
+
         if (isActive) {
-            el.classList.add("active", sessionClass);
-            active = session;
+            if (!el.classList.contains("active")) el.classList.add("active", sessionClass);
+            activeSessions.push(session);
         } else {
             el.classList.remove("active", sessionClass);
         }
     }
 
-    document.getElementById("pairs").textContent = active ? `Best Pairs: ${pairsBySession[active]}` : "Best Pairs: -";
+    if (activeSessions.length > 0) {
+        const allPairs = activeSessions.flatMap(s => pairsBySession[s].split(', '));
+        const uniquePairs = [...new Set(allPairs)];
+        document.getElementById("pairs").textContent = `Best Pairs: ${uniquePairs.join(', ')}`;
+    } else {
+        document.getElementById("pairs").textContent = "Best Pairs: -";
+    }
 }
 
 function getNextSession(utcHour) {
@@ -62,11 +69,11 @@ function updateCountdown() {
     let minutes = Math.floor((diff % 3600) / 60);
     let seconds = diff % 60;
 
-    document.getElementById("countdown").textContent = `Next Session: ${next.name} opens in ${hours}h ${minutes}m ${seconds}s`;
+    document.getElementById("countdown").textContent =
+        `Next Session: ${next.name} opens in ${hours}h ${minutes}m ${seconds}s`;
 }
 
-setInterval(highlightSession, 60000);
+setInterval(highlightSession, 1000);
 highlightSession();
-
 setInterval(updateCountdown, 1000);
 updateCountdown();

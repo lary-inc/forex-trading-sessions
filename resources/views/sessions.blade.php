@@ -4,10 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <title>Trading Sessions Dashboard</title>
-    @vite('resources/css/app.css')
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             background: #0b0f19;
             color: #fff;
@@ -16,17 +18,20 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            margin: 0;
         }
 
         .dashboard {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 2rem;
-            padding: 3rem 4rem;
+            padding: 3rem 6rem;
             text-align: center;
             box-shadow: 0 0 35px rgba(0, 255, 255, 0.25);
+            overflow: visible;
+            max-width: 700px;
+            width: 100%;
         }
 
-        /* Futuristic glowing header */
         .dashboard-title {
             font-size: 2.5rem;
             font-weight: bold;
@@ -48,15 +53,15 @@
 
         .sessions {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-gap: 3rem;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 3.5rem;
             margin-top: 2.5rem;
             justify-items: center;
         }
 
         .session {
-            width: 160px;
-            height: 160px;
+            width: 140px;
+            height: 140px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -81,7 +86,6 @@
             box-shadow: 0 0 20px cyan;
         }
 
-        /* Active session variations */
         .session.active.sydney {
             animation: pulse-sydney 2s infinite alternate;
         }
@@ -90,9 +94,9 @@
             animation: pulse-tokyo 2s infinite alternate;
         }
 
-        .session.active.frankfurt {
+        /* .session.active.frankfurt {
             animation: pulse-frankfurt 2s infinite alternate;
-        }
+        } */
 
         .session.active.london {
             animation: pulse-london 2s infinite alternate;
@@ -102,7 +106,6 @@
             animation: pulse-newyork 2s infinite alternate;
         }
 
-        /* Pulse Animations */
         @keyframes pulse-sydney {
             from {
                 box-shadow: 0 0 25px #ffb347, 0 0 50px #ffb347;
@@ -171,6 +174,50 @@
             color: #ffcc00;
             text-shadow: 0 0 10px #ffcc00, 0 0 20px #ffcc00;
         }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                padding: 2rem;
+            }
+
+            .dashboard-title {
+                font-size: 2rem;
+            }
+
+            .sessions {
+                grid-template-columns: 1fr;
+                grid-gap: 2rem;
+            }
+
+            .session {
+                width: 120px;
+                height: 120px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sessions {
+                grid-template-columns: 1fr;
+                grid-gap: 1.5rem;
+            }
+
+            .session {
+                width: 100px;
+                height: 100px;
+                font-size: 0.9rem;
+            }
+
+            .dashboard-title {
+                font-size: 1.7rem;
+            }
+
+            .clock,
+            .pairs,
+            .countdown {
+                font-size: 1rem;
+            }
+        }
     </style>
 </head>
 
@@ -185,7 +232,7 @@
         <div class="sessions">
             <div id="Sydney" class="session">Sydney</div>
             <div id="Tokyo" class="session">Tokyo</div>
-            <div id="Frankfurt" class="session">Frankfurt</div>
+            {{-- <div id="Frankfurt" class="session">Frankfurt</div> --}}
             <div id="London" class="session">London</div>
             <div id="NewYork" class="session">New York</div>
         </div>
@@ -203,19 +250,17 @@
         setInterval(updateClocks, 1000);
         updateClocks();
 
-        // sessions UTC hours
         const sessions = {
-            Sydney: [22, 7],
-            Tokyo: [0, 9],
-            Frankfurt: [6, 15],
-            London: [7, 16],
-            NewYork: [12, 21],
+            Sydney: [22, 7],    // 22:00 UTC (prev day) to 07:00 UTC
+            Tokyo: [0, 9],      // 00:00 UTC to 09:00 UTC
+            London: [8, 17],    // 08:00 UTC to 17:00 UTC (includes Frankfurt/Europe)
+            NewYork: [13, 22],  // 13:00 UTC to 22:00 UTC
         };
 
         const pairsBySession = {
             Sydney: "AUD/USD, NZD/USD",
             Tokyo: "USD/JPY, AUD/JPY, EUR/JPY",
-            Frankfurt: "EUR/USD, EUR/CHF",
+            // Frankfurt: "EUR/USD, EUR/CHF",
             London: "GBP/USD, EUR/USD, EUR/GBP",
             NewYork: "USD/CAD, GBP/USD, EUR/USD, XAU/USD"
         };
@@ -223,29 +268,49 @@
         function highlightSession() {
             const now = new Date();
             const utcHour = now.getUTCHours();
-            let active = null;
+            const utcMinutes = now.getUTCMinutes();
+            const utcTime = utcHour + utcMinutes / 60; // Convert to decimal hours for precision
+            let activeSessions = [];
 
             for (let session in sessions) {
                 let [start, end] = sessions[session];
-                let isActive = start <= end
-                    ? (utcHour >= start && utcHour < end)
-                    : (utcHour >= start || utcHour < end);
+                let isActive;
+
+                if (start <= end) {
+                    // Normal session (e.g., Tokyo, London, New York)
+                    isActive = utcTime >= start && utcTime < end;
+                } else {
+                    // Overnight session (e.g., Sydney)
+                    isActive = utcTime >= start || utcTime < end;
+                }
 
                 const el = document.getElementById(session);
                 const sessionClass = session.toLowerCase();
 
                 if (isActive) {
-                    el.classList.add("active", sessionClass);
-                    active = session;
+                    if (!el.classList.contains("active")) {
+                        el.classList.add("active", sessionClass);
+                    }
+                    activeSessions.push(session);
                 } else {
                     el.classList.remove("active", sessionClass);
                 }
             }
 
-            document.getElementById("pairs").textContent =
-                active ? `Best Pairs: ${pairsBySession[active]}` : "Best Pairs: -";
-        }
+            // Update pairs
+            if (activeSessions.length > 0) {
+                // Gather all pairs from active sessions
+                const allPairs = activeSessions.flatMap(s => pairsBySession[s].split(', '));
 
+                // Deduplicate using Set
+                const uniquePairs = [...new Set(allPairs)];
+
+                document.getElementById("pairs").textContent = `Best Pairs: ${uniquePairs.join(', ')}`;
+            } else {
+                document.getElementById("pairs").textContent = "Best Pairs: -";
+            }
+
+        }
         function getNextSession(utcHour) {
             let sorted = Object.entries(sessions).map(([name, [start]]) => ({ name, start }));
             sorted.sort((a, b) => a.start - b.start);
@@ -253,7 +318,7 @@
             for (let s of sorted) {
                 if (utcHour < s.start) return s;
             }
-            return sorted[0]; // wrap around next day
+            return sorted[0];
         }
 
         function updateCountdown() {
@@ -275,7 +340,7 @@
                 `Next Session: ${next.name} opens in ${hours}h ${minutes}m ${seconds}s`;
         }
 
-        setInterval(highlightSession, 60000);
+        setInterval(highlightSession, 1000); // every second
         highlightSession();
 
         setInterval(updateCountdown, 1000);
